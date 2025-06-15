@@ -11,7 +11,7 @@ export default function Home() {
       </Head>
       <main className="flex flex-col items-center justify-start min-h-screen bg-black text-accent font-orbitron py-10 space-y-6">
         <div className="flex flex-col items-center space-y-2">
-          <img src="/logo.png" alt="Logo" className="w-32 drop-shadow-[0_0_15px_#00a6FF]" />
+<img src="/logo.gif" alt="Logo" className="w-62 drop-shadow-[0_0_15px_#00a6FF]" />
           <h1 className="text-4xl font-bold text-center"><sup>​🇹​​🇭​​🇪</sup>DOORMAN</h1>
           <SloganRotator />
         </div>

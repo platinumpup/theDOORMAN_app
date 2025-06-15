@@ -35,7 +35,7 @@ export default function SloganRotator() {
   }, []);
 
   return (
-    <div className="text-xl text-accent text-center italic space-y-2 transition-opacity duration-1000 ease-in-out">
+    <div className="text-xl text-accent text-center space-y-2 transition-opacity duration-1000 ease-in-out">
       <div key={index} className="animate-fade-in-slow">
         {slogans[index]}
       </div>
