@@ -1,22 +1,20 @@
 {
-  "name": "theDoorMan",
+  "name": "theDoorMan-app",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "axios": "^1.10.0",
-    "dotenv": "^16.5.0",
     "next": "latest",
-    "node-telegram-bot-api": "^0.66.0",
     "react": "latest",
     "react-dom": "latest"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0",
-    "tailwindcss": "^3.0.0"
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
   }
 }

@@ -11,8 +11,11 @@ module.exports = {
       },
       fontFamily: {
         orbitron: ['Orbitron', 'sans-serif'],
+      },
+      backgroundImage: {
+        'gif': "url('/logo.gif')",
       }
     },
   },
   plugins: [],
-}
+};

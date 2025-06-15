@@ -7,48 +7,15 @@ const ROOM_URLS = {
   VIP: 'https://pnpatvip.com',
 };
 
-// RELIABLE METHOD: Test if we can actually load resources from the site
+// Use the serverless API to check redirect target for Zoom meeting
 const checkRoomStatus = async (url, roomName) => {
-  return new Promise((resolve) => {
-    const timeout = setTimeout(() => resolve(false), 10000);
-
-    // Method 1: Try to load favicon
-    const testFavicon = () => {
-      return new Promise((resolveFavicon) => {
-        const img = new window.Image();
-        img.onload = () => resolveFavicon(true);
-        img.onerror = () => resolveFavicon(false);
-        const faviconUrl = url.endsWith('/') ? url + 'favicon.ico' : url + '/favicon.ico';
-        img.src = faviconUrl + '?t=' + Date.now();
-      });
-    };
-
-    // Method 2: Try to load a tiny script/image from the domain
-    const testDomain = () => {
-      return new Promise((resolveDomain) => {
-        const script = document.createElement('script');
-        script.onload = () => {
-          document.head.removeChild(script);
-          resolveDomain(true);
-        };
-        script.onerror = () => {
-          document.head.removeChild(script);
-          resolveDomain(false);
-        };
-        script.src = url + 'test-connectivity.js?t=' + Date.now();
-        document.head.appendChild(script);
-      });
-    };
-
-    Promise.allSettled([
-      testFavicon(),
-      testDomain(),
-    ]).then((results) => {
-      clearTimeout(timeout);
-      const passed = results.some(result => result.status === 'fulfilled' && result.value === true);
-      resolve(passed);
-    });
-  });
+  try {
+    const res = await fetch(`/api/checkRoom?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    return data.online === true;
+  } catch (e) {
+    return false;
+  }
 };
 
 export default function RoomList() {
@@ -74,7 +41,7 @@ export default function RoomList() {
         if (result.status === 'fulfilled') {
           const { name, isOpen } = result.value;
           newStatuses[name] = isOpen;
-          newDetails[name] = isOpen ? 'Tests passed' : 'All tests failed';
+          newDetails[name] = isOpen ? 'Redirects to Zoom meeting' : 'No Zoom meeting redirect detected';
         } else {
           const name = Object.keys(ROOM_URLS)[index];
           newStatuses[name] = false;
@@ -107,11 +74,10 @@ export default function RoomList() {
     .sort(([a], [b]) => a.localeCompare(b));
 
   return (
-
-<div className="text-center space-y-4">
+    <div className="text-center space-y-4">
       <div className="text-sm text-gray-400 mb-4">
         {isLoading ? (
-          <span>🔄 Running comprehensive tests... (may take 10-15 seconds)</span>
+          <span>🔄 Checking Zoom redirect status... (may take a few seconds)</span>
         ) : (
           <span>Last updated: {lastUpdated || 'Never'}</span>
         )}
@@ -120,8 +86,7 @@ export default function RoomList() {
           disabled={isLoading}
           className="ml-4 text-blue-400 hover:text-blue-300 disabled:opacity-50"
         >
-          {isLoading ? 'Testing...' 
-		  : '🔄️Check Again'}
+          {isLoading ? 'Testing...' : '🔄️Check Again'}
         </button>
       </div>
       {onlineRooms.length > 0 && (
@@ -141,7 +106,7 @@ export default function RoomList() {
                   <span className="superscript">{<sup>🟢</sup>}</span> JOIN <span className="font-bold underline">{name}</span> NOW!
                 </a>
               </div>
-
+              <div className="text-xs text-gray-300">{testDetails[name]}</div>
             </div>
           ))}
         </div>
@@ -156,7 +121,7 @@ export default function RoomList() {
               <div className="text-lg text-red-400">
                 <span className="superscript">{<sup>🔴</sup>}</span> <span className="font-bold">{name}:</span> OFFLINE
               </div>
-
+              <div className="text-xs text-gray-300">{testDetails[name]}</div>
             </div>
           ))}
         </div>
