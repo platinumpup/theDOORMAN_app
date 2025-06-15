@@ -4,6 +4,9 @@ import SloganRotator from '../components/SloganRotator';
 
 export default function Home() {
   return (
+  <main className="bg-gif flex flex-col items-center justify-start min-h-screen w-full text-accent font-orbitron py-10 space-y-6">
+  {/* ...your content... */}
+</main>
     <>
       <Head>
         <title>theDoorMan</title>
